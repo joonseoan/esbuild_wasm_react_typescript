@@ -1,6 +1,8 @@
 import * as esbuild from 'esbuild-wasm';
 import ReactDOM from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
+import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 const App: React.FC = () => {
   const [input, setInput] = useState('');
@@ -47,13 +49,23 @@ const App: React.FC = () => {
       return;
     }
 
-    console.log(ref.current);
+    // [Bundling]
+    const result = await ref.current.build({
+      entryPoints: ['index.js'],
+      bundle: true,
+      write: false,
+      // unpkgPathPlugin is from unpkg-path-plugins.ts
+      plugins: [unpkgPathPlugin()],
+    });
+
+    // console.log('result: ', result.outputFiles[0].text);
+    // setCode(result.outputFiles[0].text);
 
     // [Transpiling with promise]
-    const result = await ref.current.transform(input, {
-      loader: 'jsx', // from 
-      target: 'es2015', // from es2015 (a bit latest version) to es5 (classic)
-    });
+    // const result = await ref.current.transform(input, {
+    //   loader: 'jsx', // from 
+    //   target: 'es2015', // from es2015 (a bit latest version) to es5 (classic)
+    // });
 
     /*
       {
@@ -62,9 +74,9 @@ const App: React.FC = () => {
         warining: [ any warning ]
       }
     */
+
     // console.log(result);
-    
-    setCode(result.code);
+    // setCode(result.code);
 
     /**
      * [esbuild setup]
