@@ -2,7 +2,6 @@ import * as esbuild from 'esbuild-wasm';
 import ReactDOM from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 const App: React.FC = () => {
   const [input, setInput] = useState('');
@@ -28,7 +27,7 @@ const App: React.FC = () => {
 
     /*
       {
-        build: bundling (webpack role)
+        build: bundling (webpack role)--> bundling
         transform: transpile (babel role) 
         and etc
       }    
@@ -56,10 +55,15 @@ const App: React.FC = () => {
       write: false,
       // unpkgPathPlugin is from unpkg-path-plugins.ts
       plugins: [unpkgPathPlugin()],
+      define: {
+        'process.env.NOD_ENV': '"production"',
+        global: 'window',
+      }
     });
 
-    // console.log('result: ', result.outputFiles[0].text);
-    // setCode(result.outputFiles[0].text);
+    // console.log('result: ', result.outputFiles[0].text); 
+    //  ===> get the code from esbuild-unpkg
+    setCode(result.outputFiles[0].text);
 
     // [Transpiling with promise]
     // const result = await ref.current.transform(input, {
@@ -76,6 +80,7 @@ const App: React.FC = () => {
     */
 
     // console.log(result);
+    // update es5 code
     // setCode(result.code);
 
     /**
