@@ -2,6 +2,7 @@ import * as esbuild from 'esbuild-wasm';
 import ReactDOM from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
+import { fetchPlugin } from './plugins/fetch-plugin';
 
 const App: React.FC = () => {
   const [input, setInput] = useState('');
@@ -49,17 +50,23 @@ const App: React.FC = () => {
     }
 
     // [Bundling]
+    // 1) telling esbuild that we want to use index.js as an bundling point,
+    // 2) get this entry point. and thhen
+    // 3) telling esbuild that do not get bundling from hard drive 
+    //    instead use this unpkgPathPlugin!
     const result = await ref.current.build({
       entryPoints: ['index.js'],
       bundle: true,
       write: false,
       // unpkgPathPlugin is from unpkg-path-plugins.ts
-      plugins: [unpkgPathPlugin()],
+      plugins: [unpkgPathPlugin(), fetchPlugin(input) ],
       define: {
         'process.env.NOD_ENV': '"production"',
         global: 'window',
       }
     });
+
+    console.log('result: ', result)
 
     // console.log('result: ', result.outputFiles[0].text); 
     //  ===> get the code from esbuild-unpkg

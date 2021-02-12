@@ -36,3 +36,16 @@ export const unpkgPathPlugin = () => {
   };
 };
 Fullscreen
+
+3. localforage
+   1) npm install localforage
+   2) web site: https://www.npmjs.com/package/localforage
+   3) localForage is a JavaScript library that improves the offline experience of your web app
+      by using an asynchronous data store with a simple, localStorage-like API. 
+      It allows developers to store many types of data instead of just strings.
+      localForage includes a localStorage-backed fallback store 
+      for browsers with no IndexedDB or WebSQL support. 
+      Asynchronous storage is available in the current versions of all major browsers: Chrome, Firefox, Internet Explorer, and Safari (including Safari Mobile).
+
+      It is using IndexedDB in browser
+   4) 
