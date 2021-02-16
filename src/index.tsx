@@ -9,7 +9,7 @@ const App: React.FC = () => {
   const [code, setCode] = useState('');
   
   /*
-    two ways to use common variable to the entire component
+    two ways to use a common variable to the entire component
 
     1. useState but it should be used when the value keeps updating
   
@@ -23,7 +23,7 @@ const App: React.FC = () => {
     // esbuild web-assembly initialization from esbuild.wasm file in public folder.
     ref.current = await esbuild.startService({
       worker: true,
-      wasmURL: '/esbuild.wasm' // url for the file pasted.
+      wasmURL: 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm'
     });
 
     /*
@@ -33,7 +33,7 @@ const App: React.FC = () => {
         and etc
       }    
     */
-    console.log('service: ', ref.current);
+    // console.log('service: ', ref.current);
   };
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const App: React.FC = () => {
 
     // [Bundling]
     // 1) telling esbuild that we want to use index.js as an bundling point,
-    // 2) get this entry point. and thhen
+    // 2) get this entry point. and then
     // 3) telling esbuild that do not get bundling from hard drive 
     //    instead use this unpkgPathPlugin!
     const result = await ref.current.build({
@@ -66,13 +66,13 @@ const App: React.FC = () => {
       }
     });
 
-    console.log('result: ', result)
-
     // console.log('result: ', result.outputFiles[0].text); 
     //  ===> get the code from esbuild-unpkg
+
+    // [transpiled and bundled code finally]
     setCode(result.outputFiles[0].text);
 
-    // [Transpiling with promise]
+    // [only Transpiling with promise]
     // const result = await ref.current.transform(input, {
     //   loader: 'jsx', // from 
     //   target: 'es2015', // from es2015 (a bit latest version) to es5 (classic)
@@ -90,21 +90,40 @@ const App: React.FC = () => {
     // update es5 code
     // setCode(result.code);
 
-    /**
-     * [esbuild setup]
-      1. visit  : https://esbuild.github.io/api/#transform-api 
-         by the way, esbuild is on the basis of Go language.
-         js code will be translated into Go lang by Web Assembly (esbuild-wasm).
-
-      2. expand node_modules and find "esbuild-wasm" dependency
-         find "esbuild-wasm" which is purple color
-
-         1) copy the file and paste it just under public folder.
-            we need to use this file inside of browser.
-
-      3. import esbuild-wasm at the top of this file.
-     */
+    // [Important: eval]
+    // built-in function browser.
+    // eval takes string and execute it browser and show the result in browser console.
+    // so the code in the text area can be executed in browser and the result show up in browser console.
+    // try {
+    //   eval(result.outputFiles[0].text);
+    // } catch (err) {
+    //   alert(err);
+    // }
   }
+
+  // because html has scrip tag that can execute the code from esbuild
+  // console.log(1) ===> 
+
+  // code from esbuild
+  // (() => {
+  // a:index.js
+  //   console.log(1);
+  // })();
+  
+  // execute it at iframe in browser like.
+  /**
+   * <html>
+   *  <head>
+   *    <script>console.log(1)</script>
+   * </head>
+   * <body></body>
+   * </html>  
+  */
+  const html = `
+    <script>
+      ${code}
+    </script>
+  `;
 
   return (
     <div>
@@ -117,6 +136,82 @@ const App: React.FC = () => {
       </div>
       {/* pre element making the code */}
       <pre>{code}</pre>
+      {/* 
+        [iframe]
+        creating an imbedded html document by implementing iframe
+        <iframe src="test.html" />
+
+        [Condition to communicate: it is "AND" condition]     
+          1) allow-same-origin
+          with 2) same localhost domain, 
+               3) same port, 
+               4) and protocol: https vs http must be same as well 
+                In other words, in the browser, netwok tab,
+                same localhost, port, protocl (http://localhost:3000) should contain test.html
+  
+
+        By default, iframe can communicate with parent html document which is index.html
+        however, it will generate many issues
+         1) errors from parent document (index.html) / child document(iframe) should not affect in each other
+            - of course, if the app needs to have that kind of communication, we should not block that comminication.
+         
+         2) However, in our case, when the user providesthe malicous code in (eval) in iframe,
+              the parent html document should not be affected due to that error in child document.
+              It should not be treated as an error in the parent and the entire app should not crash.
+              That error in the child document should be treated just to be rerendered by the user
+        
+         3) Therefore, in our app, the parent document and the child document should not have
+            any communication.
+          
+         In order to do so, the child has a separate document from from the different dom/document,
+         which has a different protocol, port, or domain to be treated separately.
+         ===> in this case, the child has all different document objects even including localstorage,
+         and so on.
+
+         However, in our application, the parent document has not specific functions that should be separate
+         except for the reason about error control above.
+         
+         In this case, we can isolate the child document by implementing different origin <--> allow-same-origin
+         but the child does not have the separate / independent document (common document but not having communication)
+         For this reason, the child document will have the limitation to use entire document for instance, localStorage
+
+         1. able to communicate between parent and child dom
+         <iframe sandbox="allow-same-origin" src="test.html" /> 
+
+         2. disable to communicate
+         // empty sandbox instead of sandbox="allow-same-origin"
+         <iframe sandbox="" src="test.html" /> // blocking communication but same document
+      */}
+      
+      {/* 
+        [Iframe communication between child document and parent document]
+
+        // [In console tab ]
+        In the browser, top : parent html
+        In the browser, test.thml: child html
+
+        - the parent can access to child value
+          [In the child]
+          window.b = 'b'
+
+          [In the parent]
+          document.querySelector('iframe').contentWindow.b
+
+        - the child can access to parent value
+          [In parent]
+          window.a = 'a'
+
+          [In the child]
+          parent.a ===> a
+    */}
+
+      {/*
+        1) sandbox="" blocking communication above 
+           ---> sandbox="allow-scripts" // allow scipts tag
+        2) srcDoc: treating string to html document 
+      */}
+      <iframe sandbox="allow-scripts" srcDoc={html} />
+     
     </div>
   );
 }

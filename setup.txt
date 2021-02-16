@@ -1,7 +1,21 @@
 1. npm
 npm install --save-exact esbuild-wasm@0.8.27
 
-2. upkg
+2. esbuild setup
+/**
+  * [esbuild setup]
+  1. visit  : https://esbuild.github.io/api/#transform-api 
+      by the way, esbuild is on the basis of Go language.
+      js code will be translated into Go lang by Web Assembly (esbuild-wasm).
+
+  2. expand node_modules and find "esbuild-wasm" dependency
+      find "esbuild-wasm" which is purple color
+      it is including the library.
+    
+  3. import esbuild-wasm at the top of this file.
+  */
+
+3. upkg
 
 import * as esbuild from 'esbuild-wasm';
  
@@ -37,7 +51,7 @@ export const unpkgPathPlugin = () => {
 };
 Fullscreen
 
-3. localforage
+4. localforage
    1) npm install localforage
    2) web site: https://www.npmjs.com/package/localforage
    3) localForage is a JavaScript library that improves the offline experience of your web app
@@ -49,3 +63,7 @@ Fullscreen
 
       It is using IndexedDB in browser
    4) 
+
+5. iframe.
+  1. create an another html file in public "test.html"
+  2. index.tsx, <iframe src="test/html" />
