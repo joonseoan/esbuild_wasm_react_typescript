@@ -67,3 +67,15 @@ Fullscreen
 5. iframe.
   1. create an another html file in public "test.html"
   2. index.tsx, <iframe src="test/html" />
+
+6. moaco editor
+  1) npm install --save-exact @monaco-editor/react@3.7.5
+  2) document : npm websie and type @monaco-editor/react in search bar or https://www.npmjs.com/package/@monaco-editor/react/v/3.7.5
+  3) we will going to use Editor in Props. (Find Props section and Editor.)
+  4)  npm install --save-exact monaco-editor // it is for reaching out Monaco Editor type defninition. It is required to be installed separately
+
+7. prettier into editor
+npm install prettier @types/prettier
+
+8. CSS library
+$ npm install bulmaswatch
