@@ -4,7 +4,17 @@ import MonacoEditor, { EditorDidMount } from '@monaco-editor/react';
 import prettier from 'prettier';
 // prettier is supporting different language.
 import parser from 'prettier/parser-babel';
+import codeShift from 'jscodeshift';
+
+// [IMPORTANT]
+// "monaco-jsx-highlighter" does not have type-definition file for the module
+// and also it has an error (redline)
+// In this case, we need to override typescript manually in "types.d.ts" file
+import Highlighter from 'monaco-jsx-highlighter';
+
 import 'bulmaswatch/superhero/bulmaswatch.min.css';
+import './code-editor.css';
+import './syntax.css';
 
 export interface CodeEditorProps {
   initialValue: string;
@@ -92,6 +102,28 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     // editor.ITextModelUpdateOptions.tabSize it is not object inside of object!!!
     // please find updateOptions first!!!!!!!!!!!
     editor.getModel()?.updateOptions({ tabSize: 2 });
+
+    const highlighter =  new Highlighter(
+
+      // [ IMPORTANT ]
+      // window has monaco property but typescript does not able to recognize it.
+      // In this case, we can use // @ts-ignore
+      
+      // @ts-ignore
+      window.monaco,
+      //jscodeShift
+      codeShift,
+      editor,
+    );
+    
+    // when the text in editor changes...add hightlight to it.
+    highlighter.highLightOnDidChangeModelContent(
+      // do not console for the user's typo and mistake.
+      () => {},
+      () => {},
+      undefined,
+      () => {},
+    );
   }
 
   const onFormatClick = () => {
@@ -106,14 +138,17 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       useTabs: false,
       semi: true,
       singleQuote: true,
-    });
+    })
+    // console.log('formatted: ', formatted) // const a = 1; // initial value
+    // changing the new line character into '';
+    .replace(/\n$/, '');
 
     // set the formatted value back in the editor
     ref.current.setValue(formatted);
   }
 
   return (
-    <div>
+    <div className="editor-wrapper">
       <button
         className="button button-format is-primary is-small"
         onClick={onFormatClick}

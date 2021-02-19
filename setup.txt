@@ -79,3 +79,8 @@ npm install prettier @types/prettier
 
 8. CSS library
 $ npm install bulmaswatch
+
+9. Monaco-jsx-highlighter
+  // monaco-jsx-highlighter is not able to find jsx code. It is just highlighter
+  // jscodeshift is a finder for jsx code
+  npm install --save-exact monaco-jsx-highlighter@0.0.15 jscodeshift@0.11.0 @types/jscodeshift@0.7.2
