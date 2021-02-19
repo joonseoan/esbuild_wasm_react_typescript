@@ -14,12 +14,12 @@ const CodeCell: React.FC = () => {
   }
 
   const onClick = async () => {
-    // steve
+    // [IMPORTANT]
+    // steve: recevied the elaborate data
     const esbuildResult = await esbuildService(input);
     setCode(esbuildResult);
 
-
-    // joon
+    // joon: get large amount of data.
     // const esbuildResult: BuildResult = await esbuildService(input);
 
     // if (!esbuildResult || !esbuildResult.outputFiles) {

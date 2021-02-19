@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import MonacoEditor, { EditorDidMount } from '@monaco-editor/react';
 // import monacoEditor from 'monaco-editor';
 import prettier from 'prettier';
-// prettier is supporting different language.
+// prettier is supporting different language. so that's why parser is required.
 import parser from 'prettier/parser-babel';
 import codeShift from 'jscodeshift';
 
@@ -71,7 +71,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       editor: monacoEditor.editor.IStandaloneCodeEditor,
     ) => void;
 
-    So, when the parent interface is deifined,
+    So, particulary when we need to define type directly from lib and we should use its most parent interface,
     we should not implement the detail child types
   */
   const editorDidMount: EditorDidMount = (

@@ -7,6 +7,7 @@ let service: esbuild.Service;
 const esbuildResult =  async (rawCode: string) => {
 
   if (!service) {
+    // [Important]
     // to get return type
     // 1) make a variable like const service = await esbuild.startService() ==> mouse over service and then get return type
     // 2) or otherwise, the function "startService" and get the Promise<> return type. particularly for await function.
@@ -28,8 +29,10 @@ const esbuildResult =  async (rawCode: string) => {
     },
   });
 
+  // [Important] just send the elaborate value to minimize the type defnintion.
   return result.outputFiles[0].text;
 
+  // not like this
   // joon
   // return await service.build({
   //   entryPoints: ['index.js'],
