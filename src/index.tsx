@@ -6,7 +6,7 @@ import CodeCell from './components/code-cell';
 const App: React.FC = () => {
   return (
     <div>
-      <CodeCell />
+      {/* <CodeCell /> */}
       <CodeCell />
     </div>
   );

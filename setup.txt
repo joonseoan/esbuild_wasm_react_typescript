@@ -84,3 +84,6 @@ $ npm install bulmaswatch
   // monaco-jsx-highlighter is not able to find jsx code. It is just highlighter
   // jscodeshift is a finder for jsx code
   npm install --save-exact monaco-jsx-highlighter@0.0.15 jscodeshift@0.11.0 @types/jscodeshift@0.7.2
+
+10. React-resiszble
+npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2

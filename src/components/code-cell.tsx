@@ -4,6 +4,7 @@ import { useState } from 'react';
 import esbuildService from '../bundler';
 import CodeEditor from './code-editor';
 import Preview from './preview';
+import Resizable from './resizable';
 
 const CodeCell: React.FC = () => {
   const [ code, setCode ] = useState('');
@@ -30,16 +31,18 @@ const CodeCell: React.FC = () => {
   }
 
   return (
-    <div>
-      <CodeEditor
-        initialValue="const a = 1;"
-        editorOnChange={editorOnChange}
-      />
-      <div onClick={onClick}>
-        <button>Submit</button>
+    <Resizable direction='vertical'>
+      <div>
+        <CodeEditor
+          initialValue="const a = 1;"
+          editorOnChange={editorOnChange}
+        />
+        <div onClick={onClick}>
+          <button>Submit</button>
+        </div>
+        <Preview code={code} />
       </div>
-      <Preview code={code} />
-    </div>
+    </Resizable>
   );
 };
 

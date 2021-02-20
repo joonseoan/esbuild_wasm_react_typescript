@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import MonacoEditor, { EditorDidMount } from '@monaco-editor/react';
+// it was only for line 87
 // import monacoEditor from 'monaco-editor';
 import prettier from 'prettier';
 // prettier is supporting different language. so that's why parser is required.
@@ -87,7 +88,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     // from Joon (too specifying the child)
     // editor: monacoEditor.editor.IStandaloneCodeEditor // without EditorDidMount
   ) => {
-    // Important
+    // [Important]
     // ref value can remember any value in anywhere in any fuctions which are "stay running"
     ref.current = editor;
 
@@ -100,7 +101,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     });
 
     // editor.ITextModelUpdateOptions.tabSize it is not object inside of object!!!
-    // please find updateOptions first!!!!!!!!!!!
+    // please find updateOptions in typescript first!!!!!!!!!!!
     editor.getModel()?.updateOptions({ tabSize: 2 });
 
     const highlighter =  new Highlighter(
