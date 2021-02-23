@@ -5,7 +5,7 @@
 }
 
 /* 
-  from Resizable lig,
+  from Resizable lib,
   when we click the dragging bar,
   "react-draggable-transparent-selection" class name is added into "Body"
 */
@@ -19,6 +19,7 @@
 /* as long as the combination exists */
 .react-draggable-transparent-selection .preview-wrapper::after {
   content: '';
+  /* by implementing absolute, it is on top of the preview screen */
   position: absolute;
   top: 0;
   bottom: 0;

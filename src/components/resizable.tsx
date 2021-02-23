@@ -55,14 +55,13 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
     }
   }
 
-
   // default width and height are 200 and 200 respectively.
   return (
     // to show Resizable box, we must display it in css!!
     <ResizableBox
       { ...resizableProps }
 
-      // we can make the props
+      // It is only for vertical example
       // resizableBox does not support px and %
       // instead "Infinity" === 100%
 
