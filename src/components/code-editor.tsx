@@ -166,7 +166,9 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
         language="javascript" 
         // light (default from Theme) | dark (from Theme) | string (not from Thme but other color)
         theme="dark" 
-        height="500px"
+
+        // to fit Resizable height
+        height="100%"
   
         // [IMPORTANT]
         // [options?: monacoEditor.editor.IEditorConstructionOptions;]

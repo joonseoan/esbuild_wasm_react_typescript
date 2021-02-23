@@ -16,7 +16,7 @@ const CodeCell: React.FC = () => {
 
   const onClick = async () => {
     // [IMPORTANT]
-    // steve: recevied the elaborate data
+    // steve: recevied the elaborated data
     const esbuildResult = await esbuildService(input);
     setCode(esbuildResult);
 
@@ -31,15 +31,18 @@ const CodeCell: React.FC = () => {
   }
 
   return (
+    // Resizable is working 1 vertical with multiple horizaontal like table
     <Resizable direction='vertical'>
-      <div>
-        <CodeEditor
-          initialValue="const a = 1;"
-          editorOnChange={editorOnChange}
-        />
-        <div onClick={onClick}>
+      <div style={{ height: '100%', display: 'flex' }}>
+        <Resizable direction="horizontal">
+          <CodeEditor
+            initialValue="const a = 1;"
+            editorOnChange={editorOnChange}
+          />
+        </Resizable>
+        {/* <div onClick={onClick}>
           <button>Submit</button>
-        </div>
+        </div> */}
         <Preview code={code} />
       </div>
     </Resizable>
