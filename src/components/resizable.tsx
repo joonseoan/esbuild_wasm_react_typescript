@@ -10,6 +10,7 @@ interface ResizableProps {
 const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
   const [ screenWidth, setScreenWidth ] = useState(window.innerWidth);
   const [ screenHeight, setScreenHeight ] = useState(window.innerHeight);
+  const [ width, setWidth ] = useState(window.innerWidth * 0.8);
 
   let resizableProps: ResizableBoxProps;
 
@@ -24,6 +25,14 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
       timer = setTimeout(() => {
         setScreenWidth(window.innerWidth);
         setScreenHeight(window.innerHeight);
+
+        // if left side is greater than 80%
+        //  which means that right side is less than 20% or is disappeared
+        //  build a right side for 20%
+        if (window.innerWidth * 0.8 < width) {
+          setWidth(window.innerWidth * 0.8);  
+        }
+
       }, 100);
     }
 
@@ -32,7 +41,7 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
     return () => {
       window.removeEventListener('resize', listener);
     }
-  }, []);
+  }, [width]);
 
   if (direction === 'vertical') {
     resizableProps = {
@@ -45,13 +54,26 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
     }
   } else {
     resizableProps = {
-      // default
-      width: screenWidth * 0.8,
+      // [updating]
+      // the point where the current draggable bar is located at
+      // the point's width size must be updated when the draggable bar stops.
+      // otherwsie, the draggable bar will reset again to the default value, window.intterWidth * 0.8.
+      width,
+      // width: window.intterWidth * 0.8,
       height: Infinity,
       resizeHandles: ['e'],
       maxConstraints: [screenWidth * 0.8, Infinity],
       minConstraints: [screenWidth * 0.2, Infinity],
-      className: 'resize-horizontal'
+      className: 'resize-horizontal',
+      onResizeStop: (event, data) => { 
+        // getting left side size                                                         updating
+        console.log(data);                                                     //             ^
+        // onResizeStop: the point when the draggable bar stops.                              |      
+        // draggable bar's left side (code editor)                                            |
+        // ===> it must make "ResizableBox" from resizable box lib updatd    ------------------
+        //  because Resizable does not know the stopped point.
+        setWidth(data.size.width);
+      }
     }
   }
 

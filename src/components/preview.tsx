@@ -3,7 +3,19 @@ import { useRef, useEffect } from 'react';
 import './preview.css';
 interface PreviewProps {
   code: string;
+  err: string;
 };
+
+/*
+  // when the document object has an error, this event is invocated.
+  //  event is an Error object, not direct error message
+
+  // [ Important ]
+  // it is only working for an error from async function like setTimeout()
+  window.addEventListener('error', (event) => {
+    console.log(event);
+  });
+*/
 
 const html = `
   <html>
@@ -11,13 +23,24 @@ const html = `
     <body>
       <div id="root"></div>
       <script>
+        const handleError = (err) => {
+          const root = document.querySelector('#root');
+          root.innerHTML = '<div style="color: red;"><h1>Runtime Error</h1>' + err + '<div>';
+          throw err;
+        }
+
+        // only for async error
+        window.addEventListener('error', (event) => {
+          event.preventDefault();
+          handleError(event.error);
+        });
+
+        // for sync error : undefined or reference error , and so on.
         window.addEventListener('message', (event) => {
           try {
             eval(event.data);
           } catch (err) {
-            const root = document.querySelector('#root');
-            root.innerHTML = '<div style="color: red;"><h1>Runtime Error</h1>' + err + '<div>';
-            throw err;
+            handleError(err);
           }
         }, false);
       </script>
@@ -25,14 +48,20 @@ const html = `
   </html>
 `;
 
-const Preview: React.FC<PreviewProps> = ({ code }) => {
+const Preview: React.FC<PreviewProps> = ({ code, err }) => {
 
   const iframe = useRef<any>(null);
 
   useEffect(() => {
-    iframe.current.srcdoc = html;
-    iframe.current.contentWindow.postMessage(code, '*');
-  }, [code]);
+    // problem here is that once postMessage.to iframe does not have enough time to send message to iframe
+    // without the settimeout, it will refresh the new html before it send the postMessage to iframe. 
+    // deboucing is required.
+    iframe.current.srcdoc = html; // new iframe
+    
+    setTimeout(() => {
+        iframe.current.contentWindow.postMessage(code, '*'); // current iframe
+    }, 50);
+  }, [code, err]);
 
   return (
     <div className="preview-wrapper">
@@ -42,6 +71,8 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
         sandbox="allow-scripts"
         srcDoc={html}      
       />
+      {/* compilation error container */}
+      <div className="preview-invalid-code">{err}</div>
     </div>
   );
 }

@@ -17,33 +17,44 @@ const esbuildResult =  async (rawCode: string) => {
     });
   }
 
-  // steve
-  const result = await service.build({
-    entryPoints: ['index.js'],
-    bundle: true,
-    write: false,
-    plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
-    define: {
-      'process.env.NODE_ENV': '"production"',
-      global: 'window',
-    },
-  });
+  // try catch to get invalid code compilation error from editor
+  try {
+    // steve
+    const result = await service.build({
+      entryPoints: ['index.js'],
+      bundle: true,
+      write: false,
+      plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
+      define: {
+        'process.env.NODE_ENV': '"production"',
+        global: 'window',
+      },
+    });
 
-  // [Important] just send the elaborate value to minimize the type defnintion.
-  return result.outputFiles[0].text;
+    // not like this
+    // joon
+    // return await service.build({
+    //   entryPoints: ['index.js'],
+    //   bundle: true,
+    //   write: false,
+    //   plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
+    //   define: {
+    //     'process.env.NODE_ENV': '"production"',
+    //     global: 'window',
+    //   },
+    // });
 
-  // not like this
-  // joon
-  // return await service.build({
-  //   entryPoints: ['index.js'],
-  //   bundle: true,
-  //   write: false,
-  //   plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
-  //   define: {
-  //     'process.env.NODE_ENV': '"production"',
-  //     global: 'window',
-  //   },
-  // });
+    // [Important] just send the elaborate value to minimize the type defnintion.
+    return { 
+      code: result.outputFiles[0].text,
+      err: '',
+    }
+  } catch (error) {
+    return {
+      code: '',
+      err: error.message,
+    }
+  }
 }
 
 export default esbuildResult;

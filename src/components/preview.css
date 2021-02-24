@@ -34,5 +34,12 @@
   background-color: #ffffff;
 }
 
+.preview-invalid-code {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: red;
+}
+
 
 
