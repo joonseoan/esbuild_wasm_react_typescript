@@ -169,7 +169,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
 
         // to fit Resizable height
         height="100%"
-  
         // [IMPORTANT]
         // [options?: monacoEditor.editor.IEditorConstructionOptions;]
         // frist curily bracket ==> IEditorConstructionOptions

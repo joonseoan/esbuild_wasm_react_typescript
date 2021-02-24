@@ -17,7 +17,8 @@ const esbuildResult =  async (rawCode: string) => {
     });
   }
 
-  // try catch to get invalid code compilation error from editor
+  // try catch to get code compilation error from editor
+  // and then the error will be displayed on top of the iframe.
   try {
     // steve
     const result = await service.build({

@@ -20,7 +20,7 @@ const fileCache = localforage.createInstance({
 //   console.log('color: ', color)
 //   // visit browser application -> indexedDB --> filecache ---> "keyvaluepair"
 // })()
- 
+
 export const unpkgPathPlugin = (userInput: string) => {
   return {
     name: 'unpkg-path-plugin',

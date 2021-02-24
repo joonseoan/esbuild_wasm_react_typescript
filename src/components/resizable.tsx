@@ -70,8 +70,8 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
         console.log(data);                                                     //             ^
         // onResizeStop: the point when the draggable bar stops.                              |      
         // draggable bar's left side (code editor)                                            |
-        // ===> it must make "ResizableBox" from resizable box lib updatd    ------------------
-        //  because Resizable does not know the stopped point.
+        // ===> it must make "ResizableBox" from resizable component    ------------------
+        //  because ResizableBox does not know the stopped point.
         setWidth(data.size.width);
       }
     }

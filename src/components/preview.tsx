@@ -7,11 +7,12 @@ interface PreviewProps {
 };
 
 /*
-  // when the document object has an error, this event is invocated.
-  //  event is an Error object, not direct error message
+  // when the document object has an error, this event is invoked.
+  // event is an Error object, not direct error message, btw.
 
   // [ Important ]
   // it is only working for an error from async function like setTimeout()
+  
   window.addEventListener('error', (event) => {
     console.log(event);
   });
@@ -35,7 +36,7 @@ const html = `
           handleError(event.error);
         });
 
-        // for sync error : undefined or reference error , and so on.
+        // for sync error : undefined or reference error, and so on.
         window.addEventListener('message', (event) => {
           try {
             eval(event.data);
@@ -53,11 +54,11 @@ const Preview: React.FC<PreviewProps> = ({ code, err }) => {
   const iframe = useRef<any>(null);
 
   useEffect(() => {
-    // problem here is that once postMessage.to iframe does not have enough time to send message to iframe
-    // without the settimeout, it will refresh the new html before it send the postMessage to iframe. 
+    // problem here is that once postMessage to insert message to iframe does not have enough time.
+    // without the setTimeout, in the middle of postMessage function,
+    //   it will be refreshed and the new html will be displayed. 
     // deboucing is required.
     iframe.current.srcdoc = html; // new iframe
-    
     setTimeout(() => {
         iframe.current.contentWindow.postMessage(code, '*'); // current iframe
     }, 50);

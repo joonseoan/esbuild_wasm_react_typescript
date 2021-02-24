@@ -87,3 +87,13 @@ $ npm install bulmaswatch
 
 10. React-resiszble
 npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
+
+
+
+--------------- What I learned
+1. iframe
+2. resizable
+3. debouncing for performance
+4. pseudo before and after
+5. transpile
+6. bundle

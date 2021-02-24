@@ -59,9 +59,6 @@ const CodeCell: React.FC = () => {
             editorOnChange={editorOnChange}
           />
         </Resizable>
-        {/* <div onClick={onClick}>
-          <button>Submit</button>
-        </div> */}
         <Preview code={code} err={err} />
       </div>
     </Resizable>
