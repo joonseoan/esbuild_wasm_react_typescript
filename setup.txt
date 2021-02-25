@@ -89,6 +89,10 @@ $ npm install bulmaswatch
 npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
 
 
+11. markdown editor
+  1) find @uiw/react-md-editor in npm site
+
+
 
 --------------- What I learned
 1. iframe
@@ -97,3 +101,5 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
 4. pseudo before and after
 5. transpile
 6. bundle
+7. unset !inportant
+8. bubbling, capturing, and event delegation by usint event.target and contains(node)
