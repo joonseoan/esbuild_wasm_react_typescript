@@ -96,8 +96,6 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
  1) npm install immer
 
 
-
-
 --------------- What I learned
 1. iframe
 2. resizable
@@ -107,3 +105,7 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
 6. bundle
 7. unset !inportant
 8. bubbling, capturing, and event delegation by usint event.target and contains(node)
+
+
+100. typescript
+ 1) {} compatible with { [key: string]: value: string }
