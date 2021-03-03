@@ -7,4 +7,5 @@ const reducers = combineReducers({
 
 export default reducers;
 
+// [IMPORTANT]: for typeSelector
 export type RootState = ReturnType<typeof reducers>;

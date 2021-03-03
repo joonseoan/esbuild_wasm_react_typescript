@@ -36,7 +36,7 @@ const reducer = (state: CellState = initialState,  action: Action): CellState =>
          return state;
       }
 
-      // [ IMPORTANT ]: array can change value without the temp variable.
+      // [ IMPORTANT ]: array can change value without the temp variable. // ---> array swap
       // changeOrder[Index] the id's previous index
       // changeOrder[targetId] the current targetId value
       changeOrders[index] = changeOrders[targetId];
@@ -102,8 +102,7 @@ const reducer = (state: CellState = initialState,  action: Action): CellState =>
             ...state.data[id],
             content,
           },
-        },
-        orders: []
+        }
       };
     default:
       return state;

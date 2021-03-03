@@ -54,10 +54,11 @@ const Preview: React.FC<PreviewProps> = ({ code, err }) => {
   const iframe = useRef<any>(null);
 
   useEffect(() => {
+    // [ IMPORTANT ]
     // problem here is that once postMessage to insert message to iframe does not have enough time.
     // without the setTimeout, in the middle of postMessage function,
     //   it will be refreshed and the new html will be displayed. 
-    // deboucing is required.
+    // debouncing is required.
     iframe.current.srcdoc = html; // new iframe
     setTimeout(() => {
         iframe.current.contentWindow.postMessage(code, '*'); // current iframe
@@ -72,7 +73,7 @@ const Preview: React.FC<PreviewProps> = ({ code, err }) => {
         sandbox="allow-scripts"
         srcDoc={html}      
       />
-      {/* compilation error container */}
+      {/* compilation error container. It will be overlapped on top of the preview window. */}
       <div className="preview-invalid-code">{err}</div>
     </div>
   );

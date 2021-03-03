@@ -32,7 +32,6 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
         if (window.innerWidth * 0.8 < width) {
           setWidth(window.innerWidth * 0.8);  
         }
-
       }, 100);
     }
 
@@ -57,9 +56,9 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
       // [updating]
       // the point where the current draggable bar is located at
       // the point's width size must be updated when the draggable bar stops.
-      // otherwsie, the draggable bar will reset again to the default value, window.intterWidth * 0.8.
+      // otherwise, the draggable bar will reset again to the default value, window.innerWidth * 0.8.
       width,
-      // width: window.intterWidth * 0.8,
+      // width: window.innerWidth * 0.8,
       height: Infinity,
       resizeHandles: ['e'],
       maxConstraints: [screenWidth * 0.8, Infinity],

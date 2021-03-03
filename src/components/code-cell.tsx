@@ -2,35 +2,42 @@
 import { useState, useEffect } from 'react';
 
 import esbuildService from '../bundler';
+import { useActions } from '../hooks/use-actions';
+import { Cell } from '../redux';
 import CodeEditor from './code-editor';
 import Preview from './preview';
 import Resizable from './resizable';
 
-const CodeCell: React.FC = () => {
+interface CodeCellProps {
+  cell: Cell;
+}
+
+const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   const [ code, setCode ] = useState('');
   // compilation error message
   const [ err, setErr ] = useState('');
-  const [ input, setInput ] = useState('');
+  // const [ input, setInput ] = useState(''); // moved to redux
+  const { updateCell } = useActions();
 
   useEffect(() => {
-    // debouncing by implemeing timer
+    // debouncing by implementing timer
     // whenever user types on editor, we can's send those data to the esbuildService server.
-    // it will consume alot of resource to the application and network.
+    // it will consume a lot of resource to the application and network.
     // so debouncing (rather than immediately run some action, it has some interval. )
     const timer = setTimeout(async () => {
-      const esbuildResult = await esbuildService(input);
-        setCode(esbuildResult.code);
-        setErr(esbuildResult.err);
+      const esbuildResult = await esbuildService(cell.content);
+      setCode(esbuildResult.code);
+      setErr(esbuildResult.err);
     }, 700);
 
     return () => {
       clearTimeout(timer);
     }
-  }, [input]);
+  }, [cell.content]);
 
   const editorOnChange = (value: string) => {
-    setInput(value)
-  }
+    updateCell(cell.id, value);
+  };
 
   // since we use debouncing...timer in useEffect
   // const onClick = async () => {
@@ -55,7 +62,7 @@ const CodeCell: React.FC = () => {
       <div style={{ height: '100%', display: 'flex' }}>
         <Resizable direction="horizontal">
           <CodeEditor
-            initialValue="const a = 1;"
+            initialValue={cell.content}
             editorOnChange={editorOnChange}
           />
         </Resizable>

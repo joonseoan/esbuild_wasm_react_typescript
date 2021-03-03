@@ -95,6 +95,8 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
 12. Redux (particularly reducer) Helper, Immer
  1) npm install immer
 
+13. Install fontAwesome
+ 1) npm install @fortawesome/fontawesome-free
 
 --------------- What I learned
 1. iframe
@@ -104,7 +106,8 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
 5. transpile
 6. bundle
 7. unset !inportant
-8. bubbling, capturing, and event delegation by usint event.target and contains(node)
+8. bubbling, capturing, and event delegation by using event.target and contains(node)
+9. store.getState and store.dispatch for mock testing of redux/reducer
 
 
 100. typescript

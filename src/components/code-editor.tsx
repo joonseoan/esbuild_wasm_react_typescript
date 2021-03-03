@@ -32,7 +32,7 @@ export interface CodeEditorProps {
 
 
 /**
-  <MonacoEidtor> is just a wrapper around real Monaco Editor.
+  <MonacoEditor> is just a wrapper around real Monaco Editor.
   In order to modify real Monaco Editor, we need to pass props below.
 
   1) click "@monaco-editor/react" to get the reference of Monaco Component
@@ -75,8 +75,9 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     So, particulary when we need to define type directly from lib and we should use its most parent interface,
     we should not implement the detail child types
   */
+  // function type contains argument type!! [IMPORTANT]
   const editorDidMount: EditorDidMount = (
-    // fron steve
+    // from steve
     getEditorValue, // since it had EditorDidMount
 
     // from Joon (too specifying the child)
@@ -89,7 +90,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     // editor: monacoEditor.editor.IStandaloneCodeEditor // without EditorDidMount
   ) => {
     // [Important]
-    // ref value can remember any value in anywhere in any fuctions which are "stay running"
+    // ref value can remember any value in anywhere in any fuNctions which are "stay running"
     ref.current = editor;
 
     // it is only for the initialValue
@@ -128,7 +129,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   }
 
   const onFormatClick = () => {
-    console.log(ref.current)
+    // console.log(ref.current)
     // get current value from editor
     const unformatted = ref.current.getModel().getValue();
 
@@ -158,7 +159,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       </button>
       <MonacoEditor
         // [IMPORTANT]
-        // type function from editorDidMount type defnition.
+        // type function from editorDidMount type defInition.
         editorDidMount={editorDidMount}
         // it is just initial value that will not be running after user types in editor.
         value={initialValue}
