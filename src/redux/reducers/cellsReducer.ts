@@ -48,7 +48,7 @@ const reducer = (state: CellState = initialState,  action: Action): CellState =>
         ...state,
         orders: [ ...changeOrders ],
       };
-    case ActionType.INSERT_CELL_BEFORE:
+    case ActionType.INSERT_CELL_AFTER:
       const cell: Cell = {
         type: action.payload.type,
         id: getRandomId(),
@@ -61,9 +61,9 @@ const reducer = (state: CellState = initialState,  action: Action): CellState =>
 
       // when insertBeforeId is null, the new code item will be allocated to the last one.
       if (indexFound < 0) {
-        insertBeforeOrders.push(cell.id);
+        insertBeforeOrders.unshift(cell.id);
       } else {
-        insertBeforeOrders.splice(indexFound, 0, cell.id);
+        insertBeforeOrders.splice(indexFound + 1, 0, cell.id);
       }
 
       return {

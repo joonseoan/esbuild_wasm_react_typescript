@@ -108,6 +108,7 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
 7. unset !inportant
 8. bubbling, capturing, and event delegation by using event.target and contains(node)
 9. store.getState and store.dispatch for mock testing of redux/reducer
+10. css ease-in
 
 
 100. typescript

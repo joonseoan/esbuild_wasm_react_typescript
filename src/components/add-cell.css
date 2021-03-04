@@ -1,0 +1,38 @@
+.add-cell {
+  position: relative;
+  opacity: 0;
+  /* 
+    ease-in transition is very slow at the beginning
+    .1s: for the moment, it is not going to fade in (it is not required but if we want to setup, we can define the time)
+  */
+  transition: opacity .5s ease-in .1s;
+  margin: 10px 0;
+}
+
+.add-cell:hover {
+  opacity: 1.0;
+}
+
+.add-cell.force-visible {
+  opacity: 1;
+}
+
+.add-cell .divider {
+  position: absolute;
+  top: 50%;
+  bottom: 50%;
+  right: 2.5%;
+  left: 2.5%;
+  border-bottom: 1px solid gray;
+  width: 95%;
+  z-index: -1;
+}
+
+.add-cell .add-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.add-cell .add-buttons button {
+  margin: 0 20px;
+}

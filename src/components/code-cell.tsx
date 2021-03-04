@@ -59,7 +59,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   return (
     // Resizable is working 1 vertical with multiple horizaontal like table
     <Resizable direction='vertical'>
-      <div style={{ height: '100%', display: 'flex' }}>
+      <div style={{ height: 'calc(100% - 10px)', display: 'flex' }}>
         <Resizable direction="horizontal">
           <CodeEditor
             initialValue={cell.content}
