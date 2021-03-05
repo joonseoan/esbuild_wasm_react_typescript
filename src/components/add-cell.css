@@ -13,6 +13,16 @@
   opacity: 1.0;
 }
 
+/* IMPORTANT */
+/* hover is for mouse over but active is working instantly 
+  after the click in before the click out (release) 
+*/
+.add-cell:active {
+  opacity: 1 !important;
+  /* immediately opacity is 0 for 0s */
+  transition: opacity 0s;
+}
+
 .add-cell.force-visible {
   opacity: 1;
 }

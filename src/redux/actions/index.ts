@@ -30,5 +30,25 @@ export interface UpdateCellAction {
   }
 }
 
+export interface BundleStartAction {
+  type: ActionType.BUNDLE_START;
+  payload: {
+    cellId: string;
+  }
+}
+
+export interface BundleCompleteAction {
+  type: ActionType.BUNDLE_COMPLETE,
+  payload: {
+    cellId: string;
+    // from /bundler/index.js
+    bundle: {
+      code: string; // bundled and transpile code
+      err: string; // error from esbuild
+    }
+  }
+}
+
 export type Action = 
-  MoveCellAction | DeleteCellAction | InsertCellAfterAction | UpdateCellAction;
+  MoveCellAction | DeleteCellAction | InsertCellAfterAction | UpdateCellAction
+  | BundleStartAction | BundleCompleteAction;

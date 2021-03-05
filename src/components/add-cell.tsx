@@ -3,16 +3,16 @@ import { CellType } from '../redux';
 import './add-cell.css';
 
 interface AddCellProps {
-  nextCellId: string | null;
+  previousCellId: string | null;
   forceVisible?: boolean;
 }
 
-const AddCell: React.FC<AddCellProps> = ({ nextCellId, forceVisible }) => {
+const AddCell: React.FC<AddCellProps> = ({ previousCellId, forceVisible }) => {
 
   const { insertCellAfter } = useActions();
 
   const onClick = (item: CellType) => {
-    insertCellAfter(nextCellId, item);
+    insertCellAfter(previousCellId, item);
   };
 
   return <div className={`add-cell ${forceVisible && 'force-visible'}`} >
