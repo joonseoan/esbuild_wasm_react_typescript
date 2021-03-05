@@ -76,5 +76,5 @@ store.dispatch({
 
 // // [IMPORTANT]
 // // by implementing "store", we can get "getState()"
-const state = store.getState();
-console.log('state ---> : ', state);
+// const state = store.getState();
+// console.log('state ---> : ', state);

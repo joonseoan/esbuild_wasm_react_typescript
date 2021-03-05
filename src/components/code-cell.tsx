@@ -19,11 +19,16 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   // const [ err, setErr ] = useState('');
   // const [ input, setInput ] = useState(''); // moved to redux
   const { updateCell, createBundle } = useActions();
+
+  // [IMPORTANT]
+  // the initial value is undefined because with cell.id the bundle object cannot be built.
+  // console.log('bundle: ', bundle); == requiring typescript control
   const bundle = useTypedSelector(({ bundles }) => bundles[cell.id]);
 
   // [IMPORTANT]
   // props, state, context, or redux value that are used inside of the components
   // and also used in useEffect, should be inside of []
+  // the value outside of the component should not be in []
   useEffect(() => {
     // debouncing by implementing timer
     // whenever user types on editor, we can's send those data to the esbuildService server.
@@ -60,10 +65,6 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 
     // setCode(esbuildResult.outputFiles[0].text);
   // }
-
-  // [IMPORTANT]
-  // the initial value is undefined because with cell.id the bundle object cannot be built.
-  // console.log('bundle: ', bundle);
 
   return (
     // Resizable is working 1 vertical with multiple horizaontal like table
