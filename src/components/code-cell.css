@@ -1,0 +1,38 @@
+.progress-wrapper {
+  height: 100%;
+  flex-grow: 1;
+  background-color: white;
+}
+
+.progress-cover {
+  height: 100%;
+  width: 100%;
+  flex-grow: 1;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  padding-left: 10%;
+  padding-right: 10%;
+  /* 
+    fade in: show up gradually 
+    0.5s: total period
+  */
+  animation: fadeIn 0.5s;
+}
+/* when the rendering is finished very fast in 0.24s, the progress bar will not show up. */
+@keyframes fadeIn {
+  /* 0s */
+  0% {
+    opacity: 0;
+  }
+
+  /* 0.5 / 2 (50%) = 2.5s */
+  50% {
+    opacity: 0;
+  }
+
+  /* 0.5sec */
+  100% {
+    opacity: 1;
+  }
+}

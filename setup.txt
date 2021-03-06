@@ -113,6 +113,8 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
 12: { [key: string]: {}} ===> empty object
 13. useEffect [] management
 14. useMemo concept and usage
+15. animation
+16. background should have same color to block flickering issue.
 
 
 100. typescript
