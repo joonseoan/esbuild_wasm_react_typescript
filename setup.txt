@@ -107,6 +107,7 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
 6. bundle
 7. unset !inportant
 8. bubbling, capturing, and event delegation by using event.target and contains(node)
+8-1. addEventListener('click'), the way to generate event from other elements
 9. store.getState and store.dispatch for mock testing of redux/reducer
 10. css ease-in
 11. pseudo active
@@ -115,6 +116,7 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
 14. useMemo concept and usage
 15. animation
 16. background should have same color to block flickering issue.
+17. by using array.join('\n'), it is same as toString() for all element. so it can be added into useEffect(() => {}, [])
 
 
 100. typescript

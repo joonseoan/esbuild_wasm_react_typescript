@@ -50,5 +50,9 @@ export interface BundleCompleteAction {
 }
 
 export type Action = 
-  MoveCellAction | DeleteCellAction | InsertCellAfterAction | UpdateCellAction
-  | BundleStartAction | BundleCompleteAction;
+  MoveCellAction 
+  | DeleteCellAction 
+  | InsertCellAfterAction 
+  | UpdateCellAction
+  | BundleStartAction 
+  | BundleCompleteAction;

@@ -19,6 +19,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ cell }) => {
 
 
   /*
+    [IMPORTANT]
     bubbling: the event function from child element can propagate to the event handler to the parent component.
     capturing: the target child event will activate the action event from the parent's event and 
               the event will get to the target event, and finally the target event will propagate the event up the the parent event again.

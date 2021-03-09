@@ -66,7 +66,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   const ref = useRef<any>(null);
 
   /*
-   ----- [IMPORTANT] ------
+    ----- [IMPORTANT] ------
     export type EditorDidMount = (
       getEditorValue: () => string,
       editor: monacoEditor.editor.IStandaloneCodeEditor,

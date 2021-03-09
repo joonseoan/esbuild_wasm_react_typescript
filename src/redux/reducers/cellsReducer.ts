@@ -73,8 +73,8 @@ const reducer = (state: CellState = initialState,  action: Action): CellState =>
           [cell.id]: {
             ...cell,
           }
-        }
-        , orders: [ 
+        }, 
+        orders: [ 
           ...insertBeforeOrders 
         ],
       };    

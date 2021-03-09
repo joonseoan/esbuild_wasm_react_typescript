@@ -65,8 +65,9 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
       minConstraints: [screenWidth * 0.2, Infinity],
       className: 'resize-horizontal',
       onResizeStop: (event, data) => { 
+        // [Important]
         // getting left side size                                                         updating
-        console.log(data);                                                     //             ^
+        // console.log(data);                                                     //             ^
         // onResizeStop: the point when the draggable bar stops.                              |      
         // draggable bar's left side (code editor)                                            |
         // ===> it must make "ResizableBox" from resizable component    ------------------

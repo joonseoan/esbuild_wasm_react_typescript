@@ -12,6 +12,7 @@ interface BundleState {
   } | undefined;
 };
 
+// [IMPORTANT]
 // empty object because of [key: string]: {}
 const initialState: BundleState = {};
 

@@ -61,7 +61,7 @@ const Preview: React.FC<PreviewProps> = ({ code, err }) => {
     // debouncing is required.
     iframe.current.srcdoc = html; // new iframe
     setTimeout(() => {
-        iframe.current.contentWindow.postMessage(code, '*'); // current iframe
+      iframe.current.contentWindow.postMessage(code, '*'); // current iframe
     }, 50);
   }, [code, err]);
 
@@ -71,7 +71,7 @@ const Preview: React.FC<PreviewProps> = ({ code, err }) => {
         ref={iframe} 
         title="Preview"
         sandbox="allow-scripts"
-        srcDoc={html}      
+        srcDoc={html}    
       />
       {/* compilation error container. It will be overlapped on top of the preview window. */}
       <div className="preview-invalid-code">{err}</div>

@@ -15,7 +15,15 @@ export const createBundle = (cellId: string, input: string) =>
       },
     });
 
-    const result = await bundle(input);
+    let result: { code: string, err: any };
+    try {
+      result = await bundle(input);
+      if (!result) {
+        throw new Error ('Unable to get bundling and transpiling.');
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
 
     dispatch({
       type: ActionType.BUNDLE_COMPLETE,
@@ -24,5 +32,4 @@ export const createBundle = (cellId: string, input: string) =>
         bundle: result,
       },
     });
-
 }
