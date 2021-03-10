@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 
 // import esbuildService from '../bundler'; // it is used in actionCreator
 import { useActions } from '../hooks/use-actions';
+import { useCumulativeCode } from '../hooks/use-cumulative';
 import { useTypedSelector } from '../hooks/use-typed-selector';
 import { Cell } from '../redux';
 import CodeEditor from './code-editor';
@@ -25,56 +26,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   // the initial value is undefined because with cell.id the bundle object cannot be built.
   // console.log('bundle: ', bundle); == requiring typescript control
   const bundle = useTypedSelector(({ bundles }) => bundles[cell.id]);
-  const cumulativeCode = useTypedSelector((state) => {
-    const { data, orders } = state.cells;
-    const orderedCells = orders.map(id => data[id]);
-
-    const cumulativeCodes = [
-      `
-        import _React from 'react';
-        import _ReactDOM from 'react-dom';
-        const show = (value) => {
-          const root = document.querySelector('#root');
-          if (typeof value === 'object') {
-            if (value.$$typeof && value.props) {
-              _ReactDOM.render(value, root);
-            } else {
-              root.innerHTML = JSON.stringify(value);
-            }
-          } else {
-            root.innerHTML = value;
-          }
-        }
-      `
-    ];
-    
-    // cumulative only for the previous codes in the previous code cells.
-    for (const c of orderedCells) {
-      // codes from the previous code cells
-      // it should not include the current code cell 
-      //  which means the new code cell to the user.
-      if (c.type === 'code') {
-        cumulativeCodes.push(c.content);
-      }
-
-      // in order to exclude the new current code cell
-      if (c.id === cell.id) {
-        break;
-      }
-    }
-    return cumulativeCodes
-  });
-
-  /*  
-    const show = (value) => {
-      document.querySelector('#root').innerHTML = value;
-    }
-        
-    const a = 1;
-    show('afafafa')
-    show('afeddddddd')
-  */
-  // console.log('cumulativeCode: ', cumulativeCode.join('\n'))
+  const cumulativeCode = useCumulativeCode(cell.id);
 
   // --------------------------------------------------------------------------------------------------
   // The [issue1] below can be resolved using the double useEffect which gets bundle in the initial rendering
@@ -96,7 +48,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 
       // 2)
       // "\n": each array element has "enter" at the end of line.
-      createBundle(cell.id, cumulativeCode.join('\n'));
+      createBundle(cell.id, cumulativeCode);
 
       // 1) only when each cell has the independent code
       // createBundle(cell.id, cell.content);
@@ -117,7 +69,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     const timer = setTimeout(async () => {
       
       // 2)
-      createBundle(cell.id, cumulativeCode.join('\n'));
+      createBundle(cell.id, cumulativeCode);
       // 1) same thing above
       // createBundle(cell.id, cell.content);
       // setErr(esbuildResult.err);
@@ -131,7 +83,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     // [IMPORTANT]
     // by using array.join('\n'), it is same as toString() for all element.
     // for this reason, we do not need to separately add cell.content
-    cumulativeCode.join('\n'),
+    cumulativeCode,
     cell.id,
     createBundle
   ]);
