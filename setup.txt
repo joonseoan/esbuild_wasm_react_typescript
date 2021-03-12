@@ -98,6 +98,106 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
 13. Install fontAwesome
  1) npm install @fortawesome/fontawesome-free
 
+
+
+14. install lerna (lerna is for managing multiple (project) with different package.json)
+ 1) npm install -g --save-exact lerna@3.22.1
+ 2) cd .. from "editor-local-client" and under the most parent directory "esbuild_4", 
+    make another folder e-code-book. (editor-local-client and e-code-book are in same folder, "esbuild" )
+ 3) get into "e-code-book" and run "lerna init" in terminal.
+ 4) move "editor-local-client" folder into "package" folder in "e-code-book"
+ 5) cd packages from e-code-book
+ 6) in packages folder, mkdir cli local-api
+ 6) get into each cli and local-api directory and npm init -y
+
+  please, note that in lerna, we need to use lerna add instead of npm install.
+  please refer "github.com/lerna/lerna"
+
+ 7) install package into each project in package folder.
+  * it does not matter where the terminal directory is because of scope.
+
+  // lerna add: same as npm install
+  // commander: package name (lib name like express)
+  // scope: position where the commander package is installed in package folder.
+  lerna add commander --scope=cli
+
+8) in local-api, create index.js file
+  module.exports = () => {
+    console.log('server started.');
+  };
+
+// "local-api" package (project) is installed in cli package (project)
+9) lerna add local-api --scope=cli
+   ==> then in package.json in cli project, it will be created. 
+   local-api: "1.0.0" : because local-api package has version 1.0.0
+   
+   "dependencies": {
+    "commander": "^7.1.0",
+    "local-api": "^1.0.0" 
+  }
+
+  also, in node_modules folder of cli, we can see local-api package.
+
+10) create index.js in cli project (package)
+const serve = require('local-api');
+serve();
+
+11) in cli package terminal, node index.js
+
+15. install typescript in local-api
+  when exporting the package, it must be javascript, not typescript.
+
+  1) lerna add typescript --dev --scope=local-api
+  2) go to local-api folder
+  3) npx typescript --init (if we do not have typescript globally), "tsc --init" is fine (if we have typescript globally)
+  4) delete index.js file and create src folder and index.ts file
+  5) in tsconfig.json file, uncomment
+      "outDir": "./dist", 
+      "declaration": true,
+  6) in package.json, add this.
+      --preserveWatchOutput ---> "index.d.ts" which is created will not create a console.
+      "start": "tsc -w --preserveWatchOutput",
+  7) in package.json, change "main" property's value to the changed path
+      "main": "dist/index.js",
+      // when it exports the package to another project, it notifies that there is typescript stuff with type definition file.
+      "types": "dist/index.d.ts", 
+
+
+16. install typescript in cli
+  1) go to cli folder and "tsc --init"
+  2) create src folder, and create index.ts file.
+    import serve from 'local-api';
+    serve();
+  3) lerna add typescript --dev --scope=cli
+      // we do not need to use "declaration": true, here because we do not export to the another package.
+      "outDir": "./dist", 
+
+  4) in package.json, 
+      delete "main": "index.js" ===> it is not required because we do not export to the another package.
+      "start": "tsc -w --preserveWatchOutput"
+  5) npm run start
+
+17. run multiple packages simultaneously
+
+  1) go to the most parent directory, "e-code-book" which has lerna lib in package.json
+  2) in package.json,
+   // lerna will run every single project which has "start" property in package.json.
+   // for instance, "start": "tsc -w" or "start": "react-scripts start",
+   "scripts": {
+    "start": "lerna run start --parallel"
+  }
+
+
+
+
+
+
+    
+
+ 
+
+
+
 --------------- What I learned
 1. iframe
 2. resizable
