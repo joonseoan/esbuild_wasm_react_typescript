@@ -118,7 +118,11 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
 
   // lerna add: same as npm install
   // commander: package name (lib name like express)
+  https://www.npmjs.com/package/commander
   // scope: position where the commander package is installed in package folder.
+
+  // commander: it read the command in terminal.
+  // it is roll like "process.argv" which is automatically provided from node.
   lerna add commander --scope=cli
 
 8) in local-api, create index.js file
@@ -127,6 +131,7 @@ npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
   };
 
 // "local-api" package (project) is installed in cli package (project)
+// [Important] please make sure the name is from package.json's name property not from the folder name
 9) lerna add local-api --scope=cli
    ==> then in package.json in cli project, it will be created. 
    local-api: "1.0.0" : because local-api package has version 1.0.0
@@ -155,13 +160,13 @@ serve();
       "outDir": "./dist", 
       "declaration": true,
   6) in package.json, add this.
-      --preserveWatchOutput ---> "index.d.ts" which is created will not create a console.
+      --preserveWatchOutput ---> it prevents from clearing all previous running logs in terminal whenever tsc -w.
       "start": "tsc -w --preserveWatchOutput",
   7) in package.json, change "main" property's value to the changed path
       "main": "dist/index.js",
       // when it exports the package to another project, it notifies that there is typescript stuff with type definition file.
       "types": "dist/index.d.ts", 
-
+  8)  lerna add @types/node --dev --scope=cli
 
 16. install typescript in cli
   1) go to cli folder and "tsc --init"
@@ -177,6 +182,8 @@ serve();
       "start": "tsc -w --preserveWatchOutput"
   5) npm run start
 
+  6)  lerna add @types/node --dev --scope=cli
+
 17. run multiple packages simultaneously
 
   1) go to the most parent directory, "e-code-book" which has lerna lib in package.json
@@ -187,12 +194,96 @@ serve();
     "start": "lerna run start --parallel"
   }
 
+  /*
+    How to run during the development?
+
+      [in first window]
+      npm start "under "e-code-book"
+      [in second window]
+      go to cli/dist
+      node index.js serve
+  */
+
+18. setup express server by implementing learna
+  lerna add express --scope=local-api
+  lerna add @types/express --dev --scope=local-api
+  lerna add cors --scope=local-api
+  lerna add @types/cors --dev --scope=local-api
+  lerna add http-proxy-middleware --scope=local-api
+
+19. how to run react and local api
+  // [IMPORTANT]
+  // local api call running react app in localhost:3000
+  and show the react app to the browser through localhost:4005.
+  
+  app.use(createProxyMiddleware({
+    target: 'http://localhost:3000',
+    // web socket: whenever something changes in the browser.
+    ws: true,
+    // trying to avoid to have log whenever the server has incoming request
+    logLevel: 'silent',
+  }));
+
+  /*
+    How to run during the development?
+
+      [in first window]
+      npm start under "e-code-book"
+      [in second window]
+      go to cli/dist
+      "node index.js serve"
+  */
+
+20. how to run in local machine
+  
+  [in first window]
+  npm start under "e-code-book"
+  [in second window]
+  go to cli/dist
+  "node index.js serve"
+  [in the third window]
+  got to "editor-local-client"
+  in that directly, which react app,
+  "npm run build"
+
+21. how to make the "react build" to be available in local-api package
+  1) in editor-local-client, find package.json file
+  2) inside there, change "name" to "editor-local-client" it is for lerna add some package --scope=editor-local-client
+  3) use "static middleware" in express server to access to create-react-app
+     static middleware will automatically connect to all files and folder in editor-local-client
 
 
+     - app.use(express.static('../../editor-local-client/build'));
+     - exit npm run start in "e-code-book"
+     - in cli dist, do "node index.js serve" only
+     - go to the browser, and localhost:4005
+     - find react app in localhost:4005 ---> it works even without npm start in "e-code-book"
+        *** however it is not going to work in real world
+            because in user machine, the each package, 
+            (cli, local-api, and editor-local-client which are zipped, cannot be sibling which means that they can't have accessible directory)
+        
+        **** in real world we can use "lerna" to link editor-local-client to local-api!
+              for instance, cli has dependencies to local-api which means it is linked together by implementing "NODE_MODULE"
+              we can find the local-api module in node_modules in cli package!!!
+
+              then, we can make editor-local-client module inside of local-api!!!
+     
+     - in local-api folder, "lerna add editor-local-client --scope=local-api"
+     - go to the package.json in local-api and find "editor-local-api" as an dependency
+     - after setup for editor-local-client and in index.ts we can directly access to editor-local-client to local-api to get the static folder
+      
+      // C:\for_poogi_pooni\react-typescript\stephen\esbuild_4\e-code-book\packages\editor-local-client\build\index.html
+      const packagePath = require.resolve('editor-local-client/build/index.html');
+
+      // C:\for_poogi_pooni\react-typescript\stephen\esbuild_4\e-code-book\packages\editor-local-client\build
+      app.use(express.static(path.dirname(packagePath)));
+
+22. After environment setup by using Process.environment
+  we must do "npm start" in e-code-book. so 4005 can serve development mode or production mode as well.
 
 
+         
 
-    
 
  
 
