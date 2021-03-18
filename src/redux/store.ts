@@ -2,45 +2,46 @@ import { createStore, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
 
 import reducers from './reducers';
-import { ActionType } from './action-types';
+import { persistMiddleware } from './middleware/persist-middleware';
+// import { ActionType } from './action-types';
 
 // {}: initial state for app!
-export const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
+// add persist Middleware
+export const store = createStore(reducers, {}, applyMiddleware(persistMiddleware, reduxThunk));
 
-
-// [IMPORTANT]
+// [IMPORTANT: Do not delete!!!]
 // we can manually test reducer by implementing dispatch and getState
-store.dispatch({
-  type: ActionType.INSERT_CELL_AFTER,
-  payload: {
-    id: null,
-    type: 'code',
-  }
-});
+// store.dispatch({
+//   type: ActionType.INSERT_CELL_AFTER,
+//   payload: {
+//     id: null,
+//     type: 'code',
+//   }
+// });
 
-store.dispatch({
-  type: ActionType.INSERT_CELL_AFTER,
-  payload: {
-    id: null,
-    type: 'text',
-  }
-});
+// store.dispatch({
+//   type: ActionType.INSERT_CELL_AFTER,
+//   payload: {
+//     id: null,
+//     type: 'text',
+//   }
+// });
 
-store.dispatch({
-  type: ActionType.INSERT_CELL_AFTER,
-  payload: {
-    id: null,
-    type: 'code',
-  }
-});
+// store.dispatch({
+//   type: ActionType.INSERT_CELL_AFTER,
+//   payload: {
+//     id: null,
+//     type: 'code',
+//   }
+// });
 
-store.dispatch({
-  type: ActionType.INSERT_CELL_AFTER,
-  payload: {
-    id: null,
-    type: 'text',
-  }
-});
+// store.dispatch({
+//   type: ActionType.INSERT_CELL_AFTER,
+//   payload: {
+//     id: null,
+//     type: 'text',
+//   }
+// });
 
 // const id = store.getState().cells.orders[0];
 

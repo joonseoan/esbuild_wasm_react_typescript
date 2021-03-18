@@ -24,6 +24,26 @@ const initialState: CellState = {
 // [Without Immer]
 const reducer = (state: CellState = initialState,  action: Action): CellState => {
   switch (action.type) {
+    case ActionType.SAVE_CELLS_ERROR:
+      return { ...state, error: action.payload };
+    case ActionType.FETCH_CELLS:
+      return { ...state, loading: true, error: null };
+    case ActionType.FETCH_CELLS_COMPLETE:
+      return {
+        ...state,
+        orders: [ ...action.payload.map(cell => cell.id) ],
+        data: { ...action.payload.reduce((acc, cell) => {
+            acc[cell.id] = cell;
+            return acc;
+          // [IMPORTANT]
+          // When we do not like to define same thing again in side of a specific interface,
+          //  we can use the defined interface property.
+          // we must not use like CellState.data ==> wrong!
+          }, {} as CellState['data']) 
+        }
+      }
+    case ActionType.FETCH_CELLS_ERROR:
+      return { ...state, loading: false, error: action.payload };
     case ActionType.MOVE_CELL:
       const moveId = action.payload.id;
       const direction = action.payload.direction;
