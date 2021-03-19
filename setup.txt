@@ -1,0 +1,495 @@
+1. npm
+npm install --save-exact esbuild-wasm@0.8.27
+
+2. esbuild setup
+/**
+  * [esbuild setup]
+  1. visit  : https://esbuild.github.io/api/#transform-api 
+      by the way, esbuild is on the basis of Go language.
+      js code will be translated into Go lang by Web Assembly (esbuild-wasm).
+
+  2. expand node_modules and find "esbuild-wasm" dependency
+      find "esbuild-wasm" which is purple color
+      it is including the library.
+    
+  3. import esbuild-wasm at the top of this file.
+  */
+
+3. upkg
+
+import * as esbuild from 'esbuild-wasm';
+ 
+export const unpkgPathPlugin = () => {
+  return {
+    name: 'unpkg-path-plugin',
+    setup(build: esbuild.PluginBuild) {
+      build.onResolve({ filter: /.*/ }, async (args: any) => {
+        console.log('onResole', args);
+        return { path: args.path, namespace: 'a' };
+      });
+ 
+      build.onLoad({ filter: /.*/ }, async (args: any) => {
+        console.log('onLoad', args);
+ 
+        if (args.path === 'index.js') {
+          return {
+            loader: 'jsx',
+            contents: `
+              import message from './message';
+              console.log(message);
+            `,
+          };
+        } else {
+          return {
+            loader: 'jsx',
+            contents: 'export default "hi there!"',
+          };
+        }
+      });
+    },
+  };
+};
+Fullscreen
+
+4. localforage
+   1) npm install localforage
+   2) web site: https://www.npmjs.com/package/localforage
+   3) localForage is a JavaScript library that improves the offline experience of your web app
+      by using an asynchronous data store with a simple, localStorage-like API. 
+      It allows developers to store many types of data instead of just strings.
+      localForage includes a localStorage-backed fallback store 
+      for browsers with no IndexedDB or WebSQL support. 
+      Asynchronous storage is available in the current versions of all major browsers: Chrome, Firefox, Internet Explorer, and Safari (including Safari Mobile).
+
+      It is using IndexedDB in browser
+   4) 
+
+5. iframe.
+  1. create an another html file in public "test.html"
+  2. index.tsx, <iframe src="test/html" />
+
+6. moaco editor
+  1) npm install --save-exact @monaco-editor/react@3.7.5
+  2) document : npm websie and type @monaco-editor/react in search bar or https://www.npmjs.com/package/@monaco-editor/react/v/3.7.5
+  3) we will going to use Editor in Props. (Find Props section and Editor.)
+  4)  npm install --save-exact monaco-editor // it is for reaching out Monaco Editor type defninition. It is required to be installed separately
+
+7. prettier into editor
+npm install prettier @types/prettier
+
+8. CSS library
+$ npm install bulmaswatch
+
+9. Monaco-jsx-highlighter
+  // monaco-jsx-highlighter is not able to find jsx code. It is just highlighter
+  // jscodeshift is a finder for jsx code
+  npm install --save-exact monaco-jsx-highlighter@0.0.15 jscodeshift@0.11.0 @types/jscodeshift@0.7.2
+
+10. React-resiszble
+npm install --save-exact react-resizable@1.11.0 @types/react-resizable@1.7.2
+
+
+11. markdown editor
+  1) find @uiw/react-md-editor in npm site
+
+12. Redux (particularly reducer) Helper, Immer
+ 1) npm install immer
+
+13. Install fontAwesome
+ 1) npm install @fortawesome/fontawesome-free
+
+
+
+14. install lerna (lerna is for managing multiple (project) with different package.json)
+ 1) npm install -g --save-exact lerna@3.22.1
+ 2) cd .. from "editor-local-client" and under the most parent directory "esbuild_4", 
+    make another folder e-code-book. (editor-local-client and e-code-book are in same folder, "esbuild" )
+ 3) get into "e-code-book" and run "lerna init" in terminal.
+ 4) move "editor-local-client" folder into "package" folder in "e-code-book"
+ 5) cd packages from e-code-book
+ 6) in packages folder, mkdir cli local-api
+ 6) get into each cli and local-api directory and npm init -y
+
+  please, note that in lerna, we need to use lerna add instead of npm install.
+  please refer "github.com/lerna/lerna"
+
+ 7) install package into each project in package folder.
+  * it does not matter where the terminal directory is because of scope.
+
+  // lerna add: same as npm install
+  // commander: package name (lib name like express)
+  https://www.npmjs.com/package/commander
+  // scope: position where the commander package is installed in package folder.
+
+  // commander: it read the command in terminal.
+  // it is roll like "process.argv" which is automatically provided from node.
+  lerna add commander --scope=cli
+
+8) in local-api, create index.js file
+  module.exports = () => {
+    console.log('server started.');
+  };
+
+// "local-api" package (project) is installed in cli package (project)
+// [Important] please make sure the name is from package.json's name property not from the folder name
+9) lerna add local-api --scope=cli
+   ==> then in package.json in cli project, it will be created. 
+   local-api: "1.0.0" : because local-api package has version 1.0.0
+   
+   "dependencies": {
+    "commander": "^7.1.0",
+    "local-api": "^1.0.0" 
+  }
+
+  also, in node_modules folder of cli, we can see local-api package.
+
+10) create index.js in cli project (package)
+const serve = require('local-api');
+serve();
+
+11) in cli package terminal, node index.js
+
+15. install typescript in local-api
+  when exporting the package, it must be javascript, not typescript.
+
+  1) lerna add typescript --dev --scope=local-api
+  2) go to local-api folder
+  3) npx typescript --init (if we do not have typescript globally), "tsc --init" is fine (if we have typescript globally)
+  4) delete index.js file and create src folder and index.ts file
+  5) in tsconfig.json file, uncomment
+      "outDir": "./dist", 
+      "declaration": true,
+  6) in package.json, add this.
+      --preserveWatchOutput ---> it prevents from clearing all previous running logs in terminal whenever tsc -w.
+      "start": "tsc -w --preserveWatchOutput",
+  7) in package.json, change "main" property's value to the changed path
+      "main": "dist/index.js",
+      // when it exports the package to another project, it notifies that there is typescript stuff with type definition file.
+      "types": "dist/index.d.ts", 
+  8)  lerna add @types/node --dev --scope=cli
+
+16. install typescript in cli
+  1) go to cli folder and "tsc --init"
+  2) create src folder, and create index.ts file.
+    import serve from 'local-api';
+    serve();
+  3) lerna add typescript --dev --scope=cli
+      // we do not need to use "declaration": true, here because we do not export to the another package.
+      "outDir": "./dist", 
+
+  4) in package.json, 
+      delete "main": "index.js" ===> it is not required because we do not export to the another package.
+      "start": "tsc -w --preserveWatchOutput"
+  5) npm run start
+
+  6)  lerna add @types/node --dev --scope=cli
+
+17. run multiple packages simultaneously
+
+  1) go to the most parent directory, "e-code-book" which has lerna lib in package.json
+  2) in package.json,
+   // lerna will run every single project which has "start" property in package.json.
+   // for instance, "start": "tsc -w" or "start": "react-scripts start",
+   "scripts": {
+    "start": "lerna run start --parallel"
+  }
+
+  /*
+    How to run during the development?
+
+      [in first window]
+      npm start "under "e-code-book"
+      [in second window]
+      go to cli/dist
+      node index.js serve
+  */
+
+18. setup express server by implementing learna
+  lerna add express --scope=local-api
+  lerna add @types/express --dev --scope=local-api
+  lerna add cors --scope=local-api
+  lerna add @types/cors --dev --scope=local-api
+  lerna add http-proxy-middleware --scope=local-api
+
+19. how to run react and local api
+  // [IMPORTANT]
+  // local api call running react app in localhost:3000
+  and show the react app to the browser through localhost:4005.
+  
+  app.use(createProxyMiddleware({
+    target: 'http://localhost:3000',
+    // web socket: whenever something changes in the browser.
+    ws: true,
+    // trying to avoid to have log whenever the server has incoming request
+    logLevel: 'silent',
+  }));
+
+  /*
+    How to run during the development?
+
+      [in first window]
+      npm start under "e-code-book"
+      [in second window]
+      go to cli/dist
+      "node index.js serve"
+  */
+
+20. how to run in local machine
+  
+  [in first window]
+  npm start under "e-code-book"
+  [in second window]
+  go to cli/dist
+  "node index.js serve"
+  [in the third window]
+  got to "editor-local-client"
+  in that directly, which react app,
+  "npm run build"
+
+21. how to make the "react build" to be available in local-api package
+  1) in editor-local-client, find package.json file
+  2) inside there, change "name" to "editor-local-client" it is for lerna add some package --scope=editor-local-client
+  3) use "static middleware" in express server to access to create-react-app
+     static middleware will automatically connect to all files and folder in editor-local-client
+
+
+     - app.use(express.static('../../editor-local-client/build'));
+     - exit npm run start in "e-code-book"
+     - in cli dist, do "node index.js serve" only
+     - go to the browser, and localhost:4005
+     - find react app in localhost:4005 ---> it works even without npm start in "e-code-book"
+        *** however it is not going to work in real world
+            because in user machine, the each package, 
+            (cli, local-api, and editor-local-client which are zipped, cannot be sibling which means that they can't have accessible directory)
+        
+        **** in real world we can use "lerna" to link editor-local-client to local-api!
+              for instance, cli has dependencies to local-api which means it is linked together by implementing "NODE_MODULE"
+              we can find the local-api module in node_modules in cli package!!!
+
+              then, we can make editor-local-client module inside of local-api!!!
+     
+     - in local-api folder, "lerna add editor-local-client --scope=local-api"
+     - go to the package.json in local-api and find "editor-local-api" as an dependency
+     - after setup for editor-local-client and in index.ts we can directly access to editor-local-client to local-api to get the static folder
+      
+      // C:\for_poogi_pooni\react-typescript\stephen\esbuild_4\e-code-book\packages\editor-local-client\build\index.html
+      const packagePath = require.resolve('editor-local-client/build/index.html');
+
+      // C:\for_poogi_pooni\react-typescript\stephen\esbuild_4\e-code-book\packages\editor-local-client\build
+      app.use(express.static(path.dirname(packagePath)));
+
+22. After environment setup by using Process.environment
+  we must do "npm start" in e-code-book. so 4005 can serve development mode or production mode as well.
+
+
+23. tiny npm registry (it is pre practice to publish the real project)
+   please to to project, tiny-deploy
+
+24. Real publish
+   1) go to cli package and in package.json define a unique name. I defined it, "js-code-note-joon"
+   2) for "local-api" and "editor-local-client", group or scope those package with cli package because people does not install them respectively.
+      so it looks like js-code-note-joon/local-api and js-code-note-joon/editor-local-client
+    -  visit npm site, login and click my profile icon at the upper right corner.
+    - click "add organization"
+    - in the name, add "js-code-note-joon"
+    - click "create" with Unlimited public package.
+    - click skip
+    ** as we group or scope local-api and editor-local-client, we do not need to have unique names for both.
+   3) in the package.json of local-api,
+       at the name property , @js-code-note-joon/local-api
+   4) in the package.json of editor-local-client
+       at the name property, @js-code-note-joon/editor-local-client
+   5) change dependencies name.
+      - go to package.json in cli
+        -- change local-api ---> @js-code-note-joon/local-api
+        -- in the command.ts file ---> import { serve } from '@js-code-note-joon/local-api';
+      - go to package.json in local-api
+        -- change editor-local-client --->  @js-code-note-joon/editor-local-client
+        -- index.js file, const packagePath = require.resolve('@js-code-note-joon/editor-local-client/build/index.html');
+   6) in packages folder
+      lerna bootstrap
+   7) finally check anything is wrong.
+      npm start in the most parent
+      node index.js serve in cli/dist directory.
+   8) separate devDependencies and dependencies
+      for cli and local-api... they have been correctly installed.
+      so we just need to change dependencies in editor-local-client.
+
+      Basically, the app will be installed in "cli" of local machine, 
+      it is not use 'react-create-app' at all. localhost:3000 is using create-react-app, but localhost:4005 is not using create-react-app.
+      localhost:4005 is using bundling from "build" directories!!!
+
+      we do not need dependencies. Hence, All lib can be in devDependencies
+      
+      "dependencies" --> "devDependencies"
+
+      "devDependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.2",
+        "@monaco-editor/react": "3.7.5",
+        "@testing-library/jest-dom": "^5.11.8",
+        "@testing-library/react": "^11.2.2",
+        "@testing-library/user-event": "^12.6.0",
+        "@types/jest": "^26.0.19",
+        "@types/jscodeshift": "0.7.2",
+        "@types/node": "^12.19.11",
+        "@types/prettier": "^2.2.1",
+        "@types/react": "^16.14.2",
+        "@types/react-dom": "^16.9.10",
+        "@types/react-redux": "7.1.15",
+        "@types/react-resizable": "1.7.2",
+        "@uiw/react-md-editor": "2.1.1",
+        "axios": "0.21.1",
+        "bulmaswatch": "^0.8.1",
+        "esbuild-wasm": "0.8.27",
+        "immer": "^8.0.1",
+        "jscodeshift": "0.11.0",
+        "localforage": "^1.9.0",
+        "monaco-editor": "0.22.3",
+        "monaco-jsx-highlighter": "0.0.15",
+        "prettier": "^2.2.1",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
+        "react-redux": "7.2.2",
+        "react-resizable": "1.11.0",
+        "react-scripts": "4.0.1",
+        "redux": "4.0.5",
+        "redux-thunk": "2.3.0",
+        "typescript": "^4.1.3",
+        "web-vitals": "^0.2.4"
+      },
+
+   9) publicConfig: {
+     "access": "public"
+   } in each package.
+
+    ** in the editor-local-client,
+      publicConfig is replaced with private: true (<-- delete this.)
+  
+  10) configure the file to run
+    in package.json of cli
+
+    "publishConfig": {
+      "access": "public"
+    },
+    "bin": "dist/index.js",
+
+    and index.ts file in cli
+    #!/usr/bin/env node
+  
+  11) add prepublish
+    in package.json of cli and local-api
+   "scripts": {
+      "start": "tsc -w --preserveWatchOutput",
+      "prepublishOnly": "tsc"
+    },
+  
+   in package.json in editor-local-api
+     "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "prepublishOnly": "npm run build"
+      },
+  
+  12) esbuild setup to be used in cli as a package
+    
+    - in terminal,
+      lerna add esbuild@0.8.26 --exact --dev --scope=js-code-note-joon
+
+    - in package.json in cli
+
+      "scripts": {
+        "start": "tsc -w --preserveWatchOutput",
+        "prepublishOnly": "esbuild src/index.ts --platform=node --outfile=dist/index.js --bundle --minify --define:process.env.NODE_ENV=\\\"production\\\""
+      },
+
+    - after setup above verify it is working
+      in cli terminal
+      npm run prepublishOnly
+
+    - remove command dependencies for local-cli and command
+
+      // do not need these any more.
+       "@js-code-note-joon/local-api": "^1.0.0",
+        "commander": "^7.1.0"
+      // and add 
+      "@js-code-note-joon/editor-local-client": "^1.0.0",
+
+      "dependencies": {
+        "@js-code-note-joon/editor-local-client": "^1.0.0"
+      },
+
+      // paste it in devDependencies
+      "devDependencies": {
+        "@types/node": "^14.14.34",
+        "@js-code-note-joon/local-api": "^1.0.0",
+        "commander": "^7.1.0",
+        "esbuild": "0.8.26",
+        "typescript": "^4.2.3"
+      }
+    
+    13) setup git repo
+      - delete the current git repository
+        . go to editor-local-client
+        . rm -rf .git
+        . git init
+        . touch .gitignore and setup the one belows
+          build
+          dis
+          node_modules
+        . git add .
+        . git commit -m "publish"
+        
+
+
+
+
+
+
+
+
+
+
+  
+
+
+      
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+--------------- What I learned
+1. iframe
+2. resizable
+3. debouncing for performance
+4. pseudo before and after
+5. transpile
+6. bundle
+7. unset !inportant
+8. bubbling, capturing, and event delegation by using event.target and contains(node)
+8-1. addEventListener('click'), the way to generate event from other elements
+9. store.getState and store.dispatch for mock testing of redux/reducer
+10. css ease-in
+11. pseudo active
+12: { [key: string]: {}} ===> empty object
+13. useEffect [] management
+14. useMemo concept and usage
+15. animation
+16. background should have same color to block flickering issue.
+17. by using array.join('\n'), it is same as toString() for all element. so it can be added into useEffect(() => {}, [])
+
+
+100. typescript
+ 1) {} compatible with { [key: string]: value: string }

@@ -1,0 +1,45 @@
+.preview-wrapper {
+  position: relative;
+  height: 100%;
+  flex-grow: 1;
+}
+
+/* 
+  from Resizable lib,
+  when we click the dragging bar,
+  "react-draggable-transparent-selection" class name is added into "Body"
+*/
+/*
+  psuedo element after
+  after builds the fake dome just after tag or element wrapped by this class-based parent element.
+  before builds the fake dome just before tag or element wrapped by this class-based parent element.
+  Please, do not apply to the replaced element like <img >, <br>, and so on.
+*/
+
+/* as long as the combination exists */
+.react-draggable-transparent-selection .preview-wrapper::after {
+  content: '';
+  /* by implementing absolute, it is on top of the preview screen */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.preview-wrapper iframe {
+  height: 100%;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.preview-invalid-code {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: red;
+}
+
+
+
