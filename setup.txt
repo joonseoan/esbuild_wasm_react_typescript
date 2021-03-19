@@ -440,6 +440,11 @@ serve();
           node_modules
         . git add .
         . git commit -m "publish"
+    
+    14) publish
+      in the most directory "e-code-book"
+      lerna publish --no-push 
+      
         
 
 
