@@ -433,6 +433,18 @@ serve();
       - delete the current git repository
         . go to editor-local-client
         . rm -rf .git
+      -  in the most directory "e-code-book"
+        . git init
+        . touch .gitignore and setup the one belows
+          build
+          dis
+          node_modules
+        . git add .
+        . git commit -m "publish"
+    
+    14) publish
+      in the most directory "e-code-book"
+      lerna publish --no-push 
 
 
 
