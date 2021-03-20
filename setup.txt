@@ -444,7 +444,10 @@ serve();
     
     14) publish
       in the most directory "e-code-book"
-      lerna publish --no-push 
+      lerna publish --no-push --skip-git
+      . select Major 1.0
+      . type y
+
 
 
 
